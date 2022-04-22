@@ -5,6 +5,8 @@ class Robot():
         self.shield_level = shield
         self.energy = energy
         self.weapons = []
+        self.is_operational = True
+        self.can_attack_this_round = True
 
     
     def attack(self,dinosaur,weapon):
