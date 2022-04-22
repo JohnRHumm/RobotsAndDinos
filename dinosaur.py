@@ -8,8 +8,8 @@ class Dinosaur():
         self.hide_level = hide
         self.endurance = endurance
         self.attack_type = []
-        self.dead = False
-        self.has_attacked_this_round = False
+        self.is_alive = True
+        self.can_attack_this_round = True
    
     def attack(self,robot,attack_type):
         self.target_robot = robot
