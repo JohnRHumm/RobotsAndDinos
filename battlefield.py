@@ -6,8 +6,8 @@ from weapon import Weapon
 
 class Battlefield:
     def __init__(self) -> None:
-        team_dinosaurs = Herd()
-        team_robots = Fleet()
+        self.jungle_swarm = Herd()
+        self.alpha_squad = Fleet("Alpha Squad")
     
     def run_game(self):
         self.display_welcome()
@@ -56,6 +56,15 @@ class Battlefield:
         robot_2.equip_robot([laser_gun,laser_cannon,missle])
         robot_3.equip_robot([plasma_sword,laser_cannon,gamma_ray])
         print('---- Robots Armed ----\n')
+
+        print(f'****Forming {self.alpha_squad.name}****')
+        self.alpha_squad.create_fleet(robot_1)
+        self.alpha_squad.create_fleet(robot_2)
+        self.alpha_squad.create_fleet(robot_3)
+        print(f'****{self.alpha_squad.name} Assembeld****')
+        print(f'---- READY FOR BATTLE ----\n\n')
+
+        print
 
 
 
