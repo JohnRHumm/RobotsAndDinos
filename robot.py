@@ -7,7 +7,7 @@ class Robot():
         self.weapons_list = []
         self.is_operational = True
         self.can_attack_this_round = True
-        print(f'....{self.name} is powered up and on online...')
+        print(f'    ....{self.name} is powered up and on online...')
 
     
     def attack(self,dinosaur,weapon):
@@ -18,4 +18,4 @@ class Robot():
         self.weapons_list = weapons_list
         print(f'{self.name} has been equipped with:')
         for weapon in self.weapons_list:
-            print(f'    {weapon.name} Damage Rating: {weapon.attack_power} Energy Cost: {weapon.attack_cost}')
+            print(f'    {weapon.name} --> Damage Rating: {weapon.attack_power} Energy Cost: {weapon.attack_cost}')

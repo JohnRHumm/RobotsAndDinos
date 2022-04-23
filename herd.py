@@ -1,11 +1,13 @@
 class Herd():
-    def __init__(self) -> None:
-        self.dinosaurs = []
+    def __init__(self,name) -> None:
+        self.name = name
+        self.dinosaur_list = []
         self.number_of_dinosaurs_alive = 0
  
     def create_herd(self,dinosaur):
-        self.dinosaurs.append(dinosaur)
+        self.dinosaur_list.append(dinosaur)
         self.number_of_dinosaurs_alive += 1
+        print(f'    {dinosaur.name} has been added to {self.name}')
 
     def dinosaurss_left_alive(self):
         alive_dinosaurs = []
