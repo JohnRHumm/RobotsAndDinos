@@ -3,7 +3,7 @@ class Herd():
         self.dinosaurs = []
         self.number_of_dinosaurs_alive = 0
  
-    def create_heard(self,dinosaur):
+    def create_herd(self,dinosaur):
         self.dinosaurs.append(dinosaur)
         self.number_of_dinosaurs_alive += 1
 
