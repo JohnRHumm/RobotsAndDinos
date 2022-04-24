@@ -3,6 +3,7 @@ class Fleet():
         self.name = name
         self.robot_list = []
         self.number_of_robots_alive = 0
+        self.number_of_robots_can_attack_this_round = 0
  
     def create_fleet(self,robot):
         self.robot_list.append(robot)
@@ -16,12 +17,14 @@ class Fleet():
                 functioning_robots.append(robot)
         return functioning_robots
 
-    def robots_that_can_attack_this_round(self,robot_list):
-        robot_attack_list = []
-        for robot in robot_list:
-            if robot.can_attack_this_round:
-                robot_attack_list.append(robot)
-        return robot_attack_list
+    def reset_robot_can_attack(self):
+        for robot in self.robot_list:
+            if robot.is_operational:
+                robot.can_attack_this_round = True
+                self.number_of_robots_can_attack_this_round +=1
+
+    
+
 
 
 
