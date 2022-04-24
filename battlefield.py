@@ -122,12 +122,10 @@ Welcome to the year 2205\n ______________________________________________\n""" )
                 index += 1
                 dinosaur.make_dinosaur_selection_list(index)
             dino_index += 1
-        user_confirmation= 'N'
-        while user_confirmation == 'N':
-            user_selection = get_valid_integer(f'Select the attacking dinosaur (Pick 1 - {index}): ',range(1,index+1))
-            print(f'You have selected Dinosaur #{user_selection}: {self.jungle_swarm.dinosaur_list[dinosaur_index_list[user_selection-1]].name}')
-            user_confirmation = get_y_or_n_from_user('Press Y to agree or N to select a different dinosaur: ')
+        user_selection = get_valid_integer(f'Select the attacking dinosaur (Pick 1 - {index}): ',range(1,index+1))
+        print(f'You have selected Dinosaur #{user_selection}: {self.jungle_swarm.dinosaur_list[dinosaur_index_list[user_selection-1]].name}')
         dino_attack_index = dinosaur_index_list[user_selection-1]
+        
         index = 0
         robot_index = 0
         robot_index_list = []
@@ -137,12 +135,10 @@ Welcome to the year 2205\n ______________________________________________\n""" )
                 index += 1
                 robot.which_robot_to_attack(index)
             robot_index += 1
-        user_confirmation = 'N'
-        while user_confirmation == 'N':
-            user_selection = get_valid_integer(f'Pick which Robot to strike (Pick 1 - {index}): ',range(1,index+1))
-            print(f'You have selected Robot #{user_selection}: {self.alpha_squad.robot_list[robot_index_list[user_selection-1]].name}')
-            user_confirmation = get_y_or_n_from_user('Press Y to agree or N to select a different robot: ')
+        user_selection = get_valid_integer(f'Pick which Robot to strike (Pick 1 - {index}): ',range(1,index+1))
+        print(f'You have selected Robot #{user_selection}: {self.alpha_squad.robot_list[robot_index_list[user_selection-1]].name}')
         robot_to_be_attacked_index = robot_index_list[user_selection-1]
+       
         index = 0
         attack_index = 0
         attack_index_list = []
@@ -152,11 +148,8 @@ Welcome to the year 2205\n ______________________________________________\n""" )
                 index += 1
                 self.jungle_swarm.dinosaur_list[dino_attack_index].make_dinosaur_attack_list(index,attack_index)
             attack_index += 1
-        user_confirmation = 'N'
-        while user_confirmation == 'N':
-            user_selection = get_valid_integer(f'Pick which attack to use (Pick 1 - {index}): ',range(1,index+1))
-            print(f'You have selected attack #{user_selection}: {self.jungle_swarm.dinosaur_list[dino_attack_index].attack_type[attack_index_list[user_selection - 1]].name}')
-            user_confirmation = get_y_or_n_from_user('Press Y to agree or N to select a different attack: ')
+        user_selection = get_valid_integer(f'Pick which attack to use (Pick 1 - {index}): ',range(1,index+1))
+        print(f'You have selected attack #{user_selection}: {self.jungle_swarm.dinosaur_list[dino_attack_index].attack_type[attack_index_list[user_selection - 1]].name}')
         attack_to_use_index = attack_index_list[user_selection - 1]
         self.dinosaur_attack(dino_attack_index,robot_to_be_attacked_index,attack_to_use_index)
 
