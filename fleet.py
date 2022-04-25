@@ -4,6 +4,7 @@ class Fleet():
         self.robot_list = []
         self.number_of_robots_alive = 0
         self.number_of_robots_can_attack_this_round = 0
+        self.user_picks_options = True
  
     def create_fleet(self,robot):
         self.robot_list.append(robot)

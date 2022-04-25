@@ -1,11 +1,16 @@
-def get_valid_integer(message,number_range):
-    waiting_for_valid_response = True
-    while waiting_for_valid_response:
-        user_input = int(input(message))
-        if user_input not in number_range:
-            print(f'Please enter an integer 1-{number_range[-1]}')
-        else:
-            waiting_for_valid_response = False
+import random
+
+def get_valid_integer(message,number_range,user_picks_option):
+    if not user_picks_option:
+        user_input = random.choice(number_range)
+    else:
+        waiting_for_valid_response = True
+        while waiting_for_valid_response:
+            user_input = int(input(message))
+            if user_input not in number_range:
+                print(f'Please enter an integer 1-{number_range[-1]}')
+            else:
+                waiting_for_valid_response = False
     return user_input
 
 def get_y_or_n_from_user(input_message):

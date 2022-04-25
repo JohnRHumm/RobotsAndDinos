@@ -28,6 +28,8 @@ class Battlefield:
         time.sleep(5)
         self.setup_the_dinosaurs()
         time.sleep(5)
+        self.user_picks_side()
+        time.sleep(5)
         self.battle()
         time.sleep(5)
         self.display_winners()
@@ -44,11 +46,11 @@ Welcome to the year 2205 \33[0;0m \n ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
     # Step 2: Define robots, weapons, arm robots, and put into Fleet--> alpha_squad
     def setup_the_robots(self):
         print('---- Activating Robots ----')
-        robot_1 = Robot('T-800',200,75,100,5)
+        robot_1 = Robot('T-800',200,125,125,5)
         robot_1.list_status()
-        robot_2 = Robot('T-1000',150,150,150,10)
+        robot_2 = Robot('T-1000',150,200,175,10)
         robot_2.list_status()
-        robot_3 = Robot('T-X',200,200,200,20)
+        robot_3 = Robot('T-X',200,250,300,20)
         robot_3.list_status()
         print('---- Robots Activated ----')
         
@@ -112,9 +114,35 @@ Welcome to the year 2205 \33[0;0m \n ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
         self.jungle_swarm.create_herd(dino_3)
         print(f'****{self.jungle_swarm.name} is on the Prowl****')
         print(f'---- DINOSAURS READY FOR BATTLE ----\n')
+    
+    # Step 4: User pics which side they want to play
+    def user_picks_side(self):
+        message = (f'Pick your Game Play Options')
+        print('1: Play as dinosaurs computer is robots')
+        print('2: Play as robots computer is dinosaurs')
+        print('3: Play as dinosaurs and robots')
+        print('4: Computer plays both sides')
+        user_selection = get_valid_integer(f'{message} (Pick 1 - 4): ',range(1,5),True)
 
+        if user_selection == 1:
+            self.jungle_swarm.user_picks_options = True
+            self.alpha_squad.user_picks_options = False
+            print('You are the Dinosaurs')
+        elif user_selection == 2:
+            self.jungle_swarm.user_picks_options = False
+            self.alpha_squad.user_picks_options = True
+            print('You are the Robots')
+        elif user_selection == 3:
+            self.jungle_swarm.user_picks_options = True
+            self.alpha_squad.user_picks_options = True
+            print('You are playing boths sides. Guaranteed victory!')
+        else:
+            self.jungle_swarm.user_picks_options = False
+            self.alpha_squad.user_picks_options = False
+            print('Sit back and relax. Watch the computer duke it out!')
+        
 
-    # Step 4 A battle is made up of a round which contains several turns
+    # Step 5 A battle is made up of a round which contains several turns
     def battle(self):
         print("----Let's get ready to Rumble!!!!!----\n Robots vs Dinosaurs!")
         while self.jungle_swarm.number_of_dinosaurs_alive > 0 and self.alpha_squad.number_of_robots_alive > 0:
@@ -122,20 +150,32 @@ Welcome to the year 2205 \33[0;0m \n ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
             self.game_round()
         return
 
-    # Step 5 Display the results of battle
+    # Step 6 Display the results of battle
     def display_winners(self):
         if self.alpha_squad.number_of_robots_alive > 0:
             print('The robots have defeated the last of genetically altered dinosaurs!')
+            if self.alpha_squad.user_picks_options and not self.jungle_swarm.user_picks_options:
+                print('CONGRATULATIONS!! YOU HAVE WON!')
+            elif not self.alpha_squad.user_picks_options and self.jungle_swarm.user_picks_options:
+                print('Sorry! You have lost')
+            else:
+                pass
             print("""
             As the remaining robots gather around the fallen dinosaurs, a long buried bit of python code
             within the robot AI activates a termination fail safe designed by the DARPA engineers.
-            The robot's explode in a huge fireballs, leaving the Earth silent and ending the 
+            The robot's explode in huge fireballs, leaving the Earth silent and ending the 
             last great war of human civilization.""")
 
         if self.jungle_swarm.number_of_dinosaurs_alive > 0:
             print('The dinosaurs have defeated the last of robot marines!')
+            if self.jungle_swarm.user_picks_options and not self.alpha_squad.user_picks_options:
+                print('CONGRATULATIONS!! YOU HAVE WON!')
+            elif not self.jungle_swarm.user_picks_options and self.alpha_squad.user_picks_options:
+                  print('Sorry! You have lost')
+            else:
+                pass
             print("""
-            As the reamining dinosaurs gather around the burning robots, a fireball errupts in the sky from
+            As the remaining dinosaurs gather around the burning robots, a fireball errupts in the sky from
             the upper edge of the atmosphere. As the genetically altered dinosaurs look up, they track 
             a rapidly moving asteroid that impacts the Earth in a gigantic explosion!!!""")
         
@@ -182,6 +222,7 @@ Welcome to the year 2205 \33[0;0m \n ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
             self.dinosaurs_turn()
         else:
             pass
+        time.sleep(3)
         return turn_num
 
     # Randomly determine who can attack at the start of a turn. Note a dino/robot can
@@ -228,13 +269,15 @@ Welcome to the year 2205 \33[0;0m \n ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
             if self.alpha_squad.robot_list[robot_num].shield_level < 1:
                 print(f'{self.jungle_swarm.dinosaur_list[dino_num].name} has damaged {self.alpha_squad.robot_list[robot_num].name} health by {attack_damage} points')
                 self.alpha_squad.robot_list[robot_num].health -= attack_damage
-                health_percentage = (self.alpha_squad.robot_list[robot_num].health/self.alpha_squad.robot_list[robot_num].max_health) * 100
+                if self.alpha_squad.robot_list[robot_num].health < 1:
+                    self.alpha_squad.robot_list[robot_num].health = 0
+                health_percentage = round((self.alpha_squad.robot_list[robot_num].health/self.alpha_squad.robot_list[robot_num].max_health) * 100)
                 print(f'{self.alpha_squad.robot_list[robot_num].name} has {self.alpha_squad.robot_list[robot_num].health} health reamining ({health_percentage}%)')
             else:
                 if self.alpha_squad.robot_list[robot_num].shield_level > attack_damage:
                     print(f'{self.jungle_swarm.dinosaur_list[dino_num].name} has damaged {self.alpha_squad.robot_list[robot_num].name} shield by {attack_damage} points')
                     self.alpha_squad.robot_list[robot_num].shield_level -= attack_damage
-                    shield_percentage = (self.alpha_squad.robot_list[robot_num].shield_level/self.alpha_squad.robot_list[robot_num].max_shield_level) * 100
+                    shield_percentage = round((self.alpha_squad.robot_list[robot_num].shield_level/self.alpha_squad.robot_list[robot_num].max_shield_level) * 100)
                     print(f'{self.alpha_squad.robot_list[robot_num].name} has {self.alpha_squad.robot_list[robot_num].shield_level} shield reamining ({shield_percentage}%)')
                 elif self.alpha_squad.robot_list[robot_num].shield_level == attack_damage:
                     print(f'{self.jungle_swarm.dinosaur_list[dino_num].name} has destroyed {self.alpha_squad.robot_list[robot_num].name} shield')
@@ -243,14 +286,16 @@ Welcome to the year 2205 \33[0;0m \n ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
                     attack_damage -= self.alpha_squad.robot_list[robot_num].shield_level
                     print(f'{self.jungle_swarm.dinosaur_list[dino_num].name} has destroyed {self.alpha_squad.robot_list[robot_num].name} shield and caused {attack_damage} to the robots health')
                     self.alpha_squad.robot_list[robot_num].health -= attack_damage
+                    if self.alpha_squad.robot_list[robot_num].health < 1:
+                        self.alpha_squad.robot_list[robot_num].health = 0
                     self.alpha_squad.robot_list[robot_num].shield_level = 0
-                    health_percentage = (self.alpha_squad.robot_list[robot_num].health/self.alpha_squad.robot_list[robot_num].max_health) * 100
+                    health_percentage = round((self.alpha_squad.robot_list[robot_num].health/self.alpha_squad.robot_list[robot_num].max_health) * 100)
                     print(f'{self.alpha_squad.robot_list[robot_num].name} has {self.alpha_squad.robot_list[robot_num].health} health reamining ({health_percentage}%)')
         self.jungle_swarm.dinosaur_list[dino_num].can_attack_this_round = False
         self.jungle_swarm.number_of_dinosaurs_can_attack_this_round -= 1
         self.jungle_swarm.dinosaur_list[dino_num].endurance -= self.jungle_swarm.dinosaur_list[dino_num].attack_type[attack_num].attack_cost
         if self.alpha_squad.robot_list[robot_num].health < 1:
-            print(f'{self.alpha_squad.robot_list[robot_num].name} has been terminated')
+            print(f'\33[1;37;41m {self.alpha_squad.robot_list[robot_num].name} has been terminated \33[0m')
             if self.alpha_squad.robot_list[robot_num].can_attack_this_round:
                 self.alpha_squad.number_of_robots_can_attack_this_round -= 1
             self.alpha_squad.robot_list[robot_num].can_attack_this_round = False
@@ -258,7 +303,7 @@ Welcome to the year 2205 \33[0;0m \n ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
             self.alpha_squad.number_of_robots_alive -= 1
         
         if self.jungle_swarm.dinosaur_list[dino_num].health < 1:
-            print(f'{self.jungle_swarm.dinosaur_list[dino_num].name} has been died')
+            print(f'\33[1;37;41m {self.jungle_swarm.dinosaur_list[dino_num].name} has been died \33[0m')
             self.jungle_swarm.dinosaur_list[dino_num].is_alive = False
             self.jungle_swarm.number_of_dinosaurs_alive -= 1
         return
@@ -278,13 +323,13 @@ Welcome to the year 2205 \33[0;0m \n ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
             print(f"Robot attack damage is: {attack_damage} but the dinosaur's tough skin reduced the attack by {self.jungle_swarm.dinosaur_list[dino_num].hide_strength}")
             attack_damage -= self.jungle_swarm.dinosaur_list[dino_num].hide_strength
             self.jungle_swarm.dinosaur_list[dino_num].health -= attack_damage
-            health_percentage = (self.jungle_swarm.dinosaur_list[dino_num].health/self.jungle_swarm.dinosaur_list[dino_num].max_health) * 100
+            health_percentage = round((self.jungle_swarm.dinosaur_list[dino_num].health/self.jungle_swarm.dinosaur_list[dino_num].max_health) * 100)
             print(f'{self.jungle_swarm.dinosaur_list[dino_num].name} has {self.jungle_swarm.dinosaur_list[dino_num].health} health reamining ({health_percentage}%)')
         self.alpha_squad.robot_list[robot_num].can_attack_this_round = False
         self.alpha_squad.number_of_robots_can_attack_this_round -= 1
         self.alpha_squad.robot_list[robot_num].energy -= self.alpha_squad.robot_list[robot_num].weapons_list[weapon_num].attack_cost
         if self.jungle_swarm.dinosaur_list[dino_num].health < 1:
-            print(f'{self.jungle_swarm.dinosaur_list[dino_num].name} has been killed')
+            print(f'\33[1;37;41m {self.jungle_swarm.dinosaur_list[dino_num].name} has been killed \33[0m')
             if self.jungle_swarm.dinosaur_list[dino_num].can_attack_this_round:
                 self.jungle_swarm.number_of_dinosaurs_can_attack_this_round -= 1
             self.jungle_swarm.dinosaur_list[dino_num].can_attack_this_round = False
@@ -292,7 +337,7 @@ Welcome to the year 2205 \33[0;0m \n ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
             self.jungle_swarm.number_of_dinosaurs_alive -= 1
         
         if self.alpha_squad.robot_list[robot_num].health < 1:
-            print(f'{self.alpha_squad.robot_list[robot_num].name} has been terminated')
+            print(f'\33[1;37;41m {self.alpha_squad.robot_list[robot_num].name} has been terminated \33[0m')
             self.alpha_squad.robot_list[robot_num].is_operational = False
             self.alpha_squad.number_of_robots_alive -= 1
         return
@@ -311,7 +356,10 @@ Welcome to the year 2205 \33[0;0m \n ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
                 dinosaur_list.append(dinosaur)
                 index += 1
                 print(f'    {index}: Dinosaur: {dinosaur.name} --> Health: {dinosaur.health} Hide Strength: {dinosaur.hide_strength} Endurance: {dinosaur.endurance} ')
-        user_selection = get_valid_integer(f'{message} (Pick 1 - {index}): ',range(1,index+1))
+        if type_of_list == 'attack':
+            user_selection = get_valid_integer(f'{message} (Pick 1 - {index}): ',range(1,index+1),self.jungle_swarm.user_picks_options)
+        else:
+            user_selection = get_valid_integer(f'{message} (Pick 1 - {index}): ',range(1,index+1),self.alpha_squad.user_picks_options)
         print(f'You have selected Dinosaur #{user_selection}: {dinosaur_list[user_selection-1].name}')
         selected_dino = dinosaur_list[user_selection-1]
         dino_index =  self.jungle_swarm.dinosaur_list.index(selected_dino)
@@ -326,7 +374,7 @@ Welcome to the year 2205 \33[0;0m \n ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
                 attack_list.append(attack_type)
                 index += 1
                 print(f'    {index}: Attack: {attack_type.name} Damage Rating: {attack_type.attack_power} Endurance Cost: {attack_type.attack_cost}')
-        user_selection = get_valid_integer(f'{message} (Pick 1 - {index}): ',range(1,index+1))
+        user_selection = get_valid_integer(f'{message} (Pick 1 - {index}): ',range(1,index+1),self.jungle_swarm.user_picks_options)
         print(f'You have selected attack #{user_selection}: {attack_list[user_selection-1].name}')
         selected_attack = attack_list[user_selection-1]
         attack_index = self.jungle_swarm.dinosaur_list[dino_index].attack_type.index(selected_attack)
@@ -346,7 +394,10 @@ Welcome to the year 2205 \33[0;0m \n ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
                 robot_list.append(robot)
                 index += 1
                 print(f'    {index}: Robot: {robot.name} --> Health: {robot.health} Shield: {robot.shield_level} Energy: {robot.energy}')
-        user_selection = get_valid_integer(f'{message} (Pick 1 - {index}): ',range(1,index+1))
+        if type_of_list == 'attack':
+            user_selection = get_valid_integer(f'{message} (Pick 1 - {index}): ',range(1,index+1),self.alpha_squad.user_picks_options)
+        else:
+            user_selection = get_valid_integer(f'{message} (Pick 1 - {index}): ',range(1,index+1),self.jungle_swarm.user_picks_options)
         print(f'You have selected Robot #{user_selection}: {robot_list[user_selection-1].name}')
         selected_robot = robot_list[user_selection-1]
         robot_index =  self.alpha_squad.robot_list.index(selected_robot)
@@ -361,7 +412,7 @@ Welcome to the year 2205 \33[0;0m \n ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
                 weapon_list.append(weapon)
                 index += 1
                 print(f'    {index}: Attack: {weapon.name} Damage Rating: {weapon.attack_power} Endurance Cost: {weapon.attack_cost}')
-        user_selection = get_valid_integer(f'{message} (Pick 1 - {index}): ',range(1,index+1))
+        user_selection = get_valid_integer(f'{message} (Pick 1 - {index}): ',range(1,index+1),self.alpha_squad.user_picks_options)
         print(f'You have selected weapon #{user_selection}: {weapon_list[user_selection-1].name}')
         selected_weapon = weapon_list[user_selection-1]
         weapon_index = self.alpha_squad.robot_list[robot_index].weapons_list.index(selected_weapon)
