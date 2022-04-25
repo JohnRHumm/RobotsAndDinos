@@ -36,11 +36,11 @@ class Dinosaur():
             if self.endurance > self.max_endurance:
                 self.endurance = self.max_endurance
     
-    def make_dinosaur_selection_list(self,index):
-        if self.is_alive:
-            print(f'    {index}: Dinosaur: {self.name} --> Health: {self.health} Endurance: {self.endurance} ')
-        else:
-            print(f'    {index}: Dinosaur {self.name} is dead')
+    # def make_dinosaur_selection_list(self,index):
+    #     if self.is_alive:
+    #         print(f'    {index}: Dinosaur: {self.name} --> Health: {self.health} Endurance: {self.endurance} ')
+    #     else:
+    #         print(f'    {index}: Dinosaur {self.name} is dead')
     
-    def make_dinosaur_attack_list(self,index,attack_index):
-        print(f'    {index}: Attack: {self.attack_type[attack_index].name} Damage Rating: {self.attack_type[attack_index].attack_power} Endurance Cost: {self.attack_type[attack_index].attack_cost}')
+    # def make_dinosaur_attack_list(self,index,attack_index):
+    #     print(f'    {index}: Attack: {self.attack_type[attack_index].name} Damage Rating: {self.attack_type[attack_index].attack_power} Endurance Cost: {self.attack_type[attack_index].attack_cost}')

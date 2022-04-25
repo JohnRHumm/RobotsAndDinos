@@ -35,9 +35,9 @@ class Robot():
             if self.energy > self.max_energy:
                 self.energy = self.max_energy
     
-    def which_robot_to_attack(self,index):
-        if self.is_operational:
-            print(f'    {index}: Robot: {self.name} --> Health: {self.health} Shield: {self.shield_level}')
+    # def which_robot_to_attack(self,index):
+    #     if self.is_operational:
+    #         print(f'    {index}: Robot: {self.name} --> Health: {self.health} Shield: {self.shield_level}')
 
 
     
