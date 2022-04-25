@@ -4,6 +4,7 @@ class Herd():
         self.dinosaur_list = []
         self.number_of_dinosaurs_alive = 0
         self.number_of_dinosaurs_can_attack_this_round = 0
+        self.user_picks_options = True
  
     def create_herd(self,dinosaur):
         self.dinosaur_list.append(dinosaur)

@@ -13,9 +13,9 @@ class Robot():
         self.energy_recharge_rate = energy_recharge
         print(f'    ....{self.name} is powered up and on online...')
 
-    def attack(self,dinosaur,weapon):
-        self.target_dinosaur = dinosaur
-        self.weapon = weapon
+    # def attack(self,dinosaur,weapon):
+    #     self.target_dinosaur = dinosaur
+    #     self.weapon = weapon
 
     def equip_robot(self,weapons_list):
         self.weapons_list = weapons_list
@@ -34,11 +34,7 @@ class Robot():
             self.energy += self.energy_recharge_rate
             if self.energy > self.max_energy:
                 self.energy = self.max_energy
-    
-    # def which_robot_to_attack(self,index):
-    #     if self.is_operational:
-    #         print(f'    {index}: Robot: {self.name} --> Health: {self.health} Shield: {self.shield_level}')
-
+  
 
     
    
