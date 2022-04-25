@@ -14,10 +14,7 @@ class Dinosaur():
         self.can_attack_this_round = True
         print(f'    ....{self.name} is awake and angry...')
    
-    # def attack(self,robot,attack_type):
-    #     self.target_robot = robot
-    #     self.attack_type = attack_type
-
+   
     def dino_attack(self,attack_list):
         self.attack_type = attack_list
         print(f'{self.name} has the following attacks:')

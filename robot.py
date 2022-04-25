@@ -13,10 +13,7 @@ class Robot():
         self.energy_recharge_rate = energy_recharge
         print(f'    ....{self.name} is powered up and on online...')
 
-    # def attack(self,dinosaur,weapon):
-    #     self.target_dinosaur = dinosaur
-    #     self.weapon = weapon
-
+   
     def equip_robot(self,weapons_list):
         self.weapons_list = weapons_list
         print(f'{self.name} has been equipped with:')
