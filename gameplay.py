@@ -1,4 +1,5 @@
 import random
+import time
 def attack_result():
     result_of_attack = random.choice([\
         'CH','FH','FH','DB','BM','M','GB','AH','AH','SH','SH','SH','SH','CH Hit','CH','CH','CH','DB',\
@@ -31,6 +32,6 @@ def attack_result():
     else:
         descriptor = 'Death Shot'
         damage_factor = 4.0
-    print('\a')
-    print(f'\033[1;31;43m Result of attack is.....{descriptor} \033[0;0m')    
+    print(f'\033[1;31;43m Result of attack is.....{descriptor} \033[0;0m')  
+    time.sleep(1.5)  
     return damage_factor

@@ -53,6 +53,7 @@ Welcome to the year 2205 \33[0;0m \n ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
         robot_3 = Robot('T-X',200,250,300,20)
         robot_3.list_status()
         print('---- Robots Activated ----')
+        time.sleep(2)
         
         laser_gun = Weapon('Laser Gun',30,5)
         eye_beams = Weapon('Eye Beams',35,5)
@@ -71,6 +72,7 @@ Welcome to the year 2205 \33[0;0m \n ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
         robot_2.equip_robot([eye_beams,laser_cannon,missle])
         robot_3.equip_robot([plasma_sword,sonic_blast,gamma_ray])
         print('---- Robots Armed ----')
+        time.sleep(2)
 
         print(f'****Forming {self.alpha_squad.name}****')
         self.alpha_squad.create_fleet(robot_1)
@@ -101,12 +103,14 @@ Welcome to the year 2205 \33[0;0m \n ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
         dino_3 = Dinosaur('Tyrannosaurus',350,40,200,20)
         dino_3.list_status()
         print('---- Dinosaurs Alert ----')
+        time.sleep(2)
 
         print('---- Dinosaur Attack Modes  ----')
         dino_1.dino_attack([tail_whip,stomp,horn])
         dino_2.dino_attack([charge,bite,tail_club])
         dino_3.dino_attack([roar,razor_claws,chomp])
         print('---- Dinosaurs Ready to Hunt ----')
+        time.sleep(2)
 
         print(f'****Gathering {self.jungle_swarm.name}****')
         self.jungle_swarm.create_herd(dino_1)
@@ -306,6 +310,8 @@ Welcome to the year 2205 \33[0;0m \n ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
             print(f'\33[1;37;41m {self.jungle_swarm.dinosaur_list[dino_num].name} has been died \33[0m')
             self.jungle_swarm.dinosaur_list[dino_num].is_alive = False
             self.jungle_swarm.number_of_dinosaurs_alive -= 1
+        print('')
+        time.sleep(1)
         return
     
     # Result of robo attack. Dinosaurs have hide ratings, which unlike shields are not destroyed but instead take a fixed
@@ -340,6 +346,8 @@ Welcome to the year 2205 \33[0;0m \n ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
             print(f'\33[1;37;41m {self.alpha_squad.robot_list[robot_num].name} has been terminated \33[0m')
             self.alpha_squad.robot_list[robot_num].is_operational = False
             self.alpha_squad.number_of_robots_alive -= 1
+        print('')
+        time.sleep(1)
         return
 
     # Sets up user list for dinos. Depends if attack or defend. If attack only show dinos that can attack
