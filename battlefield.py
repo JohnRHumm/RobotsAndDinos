@@ -8,6 +8,7 @@ from validate_input import get_valid_integer
 from gameplay import attack_result
 import time
 import os
+import string
 if os.name == 'nt':
     from ctypes import windll
     k = windll.kernel32
@@ -18,12 +19,14 @@ class Battlefield:
         self.jungle_swarm = Herd('Jungle Swarm')
         self.alpha_squad = Fleet("Alpha Squad")
         self.round_number = 0
+        self.combatants_on_each_side = 0
       
    # This function controls the sequence of the game
     def run_game(self):
         os.system('cls')
         self.display_welcome()
         time.sleep(5)
+        self.number_of_combatants()
         self.setup_the_robots()
         time.sleep(5)
         self.setup_the_dinosaurs()
@@ -43,81 +46,63 @@ weapons and artificIal intelligence to defend the Earth. The self-aware robots i
 and exterminated all civilization. AI Robots and Genetically Programed Dinosaurs now battle for control of the planet.\n
 Welcome to the year 2205 \33[0;0m \n ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ """)
 
+    # Step 2: Ask user for the number of combatants
+    def number_of_combatants(self):
+        message_display = ('Pick the number of combatants you want on each side')
+        upper_limit = 100
+        user_selection = get_valid_integer(f'{message_display} (Pick 1 - {upper_limit}): ',range(1,upper_limit+1),True)
+        self.combatants_on_each_side = user_selection
+        return
+
+
+    
     # Step 2: Define robots, weapons, arm robots, and put into Fleet--> alpha_squad
     def setup_the_robots(self):
-        print('---- Activating Robots ----')
-        robot_1 = Robot('T-800',200,125,125,5)
-        robot_1.list_status()
-        robot_2 = Robot('T-1000',150,200,175,10)
-        robot_2.list_status()
-        robot_3 = Robot('T-X',200,250,300,20)
-        robot_3.list_status()
-        print('---- Robots Activated ----')
-        time.sleep(2)
+         weapon_group_1 = ['Laser Gun','Eye Beams','Plasma Sword']
+         weapon_group_2 = ['Flame Thrower','Laser Cannon','Sonic Blast']
+         weapon_group_3  = ['Magnetic Pulse','Guided Missle','Gamma Ray']        
+         for index in range(self.combatants_on_each_side):
+             random_name = (f'Robo-{random.choice(range(1,100))}-{random.choice(string.ascii_letters)}{random.choice(string.ascii_letters)}-{random.choice(range(1,100))}')
+             attack_1 = Weapon(random.choice(weapon_group_1),random.choice(range(15,251)),5)
+             attack_2 = Weapon(random.choice(weapon_group_2),random.choice(range(30,501)),15)
+             attack_3 = Weapon(random.choice(weapon_group_3),random.choice(range(50,1001)),30)
+             health = random.choice(range(50,1501))
+             shield = random.choice(range(50,1201))
+             energy = random.choice(range(100,1001))
+             recharge = random.choice(range(5,101))
+             robo = Robot(random_name,health,shield,energy,recharge)
+             robo.list_status()
+             robo.equip_robot([attack_1,attack_2,attack_3])
+             self.alpha_squad.create_fleet(robo)
+         print(f'****{self.alpha_squad.name} Assembled****')
+         print(f'---- ROBOTS READY FOR BATTLE ----\n')
         
-        laser_gun = Weapon('Laser Gun',30,5)
-        eye_beams = Weapon('Eye Beams',35,5)
-        plasma_sword = Weapon('Plasma Sword',40,5)
-
-        flame_thrower = Weapon('Flame Thrower',40,15)
-        laser_cannon = Weapon('Laser Cannon',50,20)
-        sonic_blast = Weapon('Sonic Blast',60,25)
-                
-        magnetic_pulse = Weapon('Magnetic Pulse',50,35)
-        missle = Weapon('Guided Missle',60,45)
-        gamma_ray = Weapon('Gamma Ray',70,55)
+ 
         
-        print('---- Arming Robots ----')
-        robot_1.equip_robot([laser_gun,flame_thrower,magnetic_pulse])
-        robot_2.equip_robot([eye_beams,laser_cannon,missle])
-        robot_3.equip_robot([plasma_sword,sonic_blast,gamma_ray])
-        print('---- Robots Armed ----')
-        time.sleep(2)
-
-        print(f'****Forming {self.alpha_squad.name}****')
-        self.alpha_squad.create_fleet(robot_1)
-        self.alpha_squad.create_fleet(robot_2)
-        self.alpha_squad.create_fleet(robot_3)
-        print(f'****{self.alpha_squad.name} Assembled****')
-        print(f'---- ROBOTS READY FOR BATTLE ----\n')
-        
-    # Step 3: Define dinos, type of attacks, assign attack modes to dino, and put into Herd--> jungle_swarm
+     # Step 3: Define dinos, type of attacks, assign attack modes to dino, and put into Herd--> jungle_swarm
     def setup_the_dinosaurs(self):
-        tail_whip = Weapon('Tail Whip',30,5)
-        charge = Weapon('Charge',35,5)
-        roar = Weapon('Roar',40,5)
-      
-        stomp = Weapon('Stomp',40,15)
-        bite = Weapon('Bite',50,20)
-        razor_claws = Weapon('Razor Claws',60,25)
-            
-        horn = Weapon('Horn',50,35)
-        tail_club = Weapon('Tail Club',60,45)
-        chomp = Weapon('Chomp',75,55)
-            
-        print('---- Awakening Dinosaurs ----')
-        dino_1 = Dinosaur('Triceratops',250,20,100,15)
-        dino_1.list_status()
-        dino_2 = Dinosaur('Ankylosaurus',300,25,150,25)
-        dino_2.list_status()
-        dino_3 = Dinosaur('Tyrannosaurus',350,50,250,35)
-        dino_3.list_status()
-        print('---- Dinosaurs Alert ----')
-        time.sleep(2)
 
-        print('---- Dinosaur Attack Modes  ----')
-        dino_1.dino_attack([tail_whip,stomp,horn])
-        dino_2.dino_attack([charge,bite,tail_club])
-        dino_3.dino_attack([roar,razor_claws,chomp])
-        print('---- Dinosaurs Ready to Hunt ----')
-        time.sleep(2)
+         attack_group_1 = ['Tail Whip','Charge','Roar']
+         attack_group_2 = ['Stomp','Bite','Razor Claws']
+         attack_group_3  = ['Horn','Clubbed Tail','Chomp']        
+        
+         for index in range(self.combatants_on_each_side):
+             random_name = (f'Dino-{random.choice(range(1,100))}-{random.choice(string.ascii_letters)}{random.choice(string.ascii_letters)}-{random.choice(range(1,100))}')
+             attack_1 = Weapon(random.choice(attack_group_1),random.choice(range(15,251)),5)
+             attack_2 = Weapon(random.choice(attack_group_2),random.choice(range(30,501)),15)
+             attack_3 = Weapon(random.choice(attack_group_3),random.choice(range(50,1251)),30)
+             health = random.choice(range(50,1251))
+             hide = random.choice(range(50,251))
+             endurance = random.choice(range(100,1201))
+             recovery = random.choice(range(5,151))
+             dino = Dinosaur(random_name,health,hide,endurance,recovery)
+             dino.list_status()
+             dino.dino_attack([attack_1,attack_2,attack_3])
+             self.jungle_swarm.create_herd(dino)
+         print(f'****{self.jungle_swarm.name} is on the Prowl****')
+         print(f'---- DINOSAURS READY FOR BATTLE ----\n')
 
-        print(f'****Gathering {self.jungle_swarm.name}****')
-        self.jungle_swarm.create_herd(dino_1)
-        self.jungle_swarm.create_herd(dino_2)
-        self.jungle_swarm.create_herd(dino_3)
-        print(f'****{self.jungle_swarm.name} is on the Prowl****')
-        print(f'---- DINOSAURS READY FOR BATTLE ----\n')
+     
     
     # Step 4: User pics which side they want to play
     def user_picks_side(self):
