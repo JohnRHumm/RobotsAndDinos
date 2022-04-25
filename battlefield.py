@@ -93,14 +93,14 @@ Welcome to the year 2205 \33[0;0m \n ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
             
         horn = Weapon('Horn',50,35)
         tail_club = Weapon('Tail Club',60,45)
-        chomp = Weapon('Chomp',70,55)
+        chomp = Weapon('Chomp',75,55)
             
         print('---- Awakening Dinosaurs ----')
-        dino_1 = Dinosaur('Triceratops',250,10,100,10)
+        dino_1 = Dinosaur('Triceratops',250,20,100,15)
         dino_1.list_status()
-        dino_2 = Dinosaur('Ankylosaurus',275,20,150,15)
+        dino_2 = Dinosaur('Ankylosaurus',300,25,150,25)
         dino_2.list_status()
-        dino_3 = Dinosaur('Tyrannosaurus',350,40,200,20)
+        dino_3 = Dinosaur('Tyrannosaurus',350,50,250,35)
         dino_3.list_status()
         print('---- Dinosaurs Alert ----')
         time.sleep(2)
@@ -207,17 +207,20 @@ Welcome to the year 2205 \33[0;0m \n ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
         for robot in self.alpha_squad.robot_list:
             robot.recharge_energy()
             robot.list_status()
+            time.sleep(.25)
         self.jungle_swarm.reset_dinosaur_can_attack()
         print('----Dinosaur status summary----')
         for dinosaur in self.jungle_swarm.dinosaur_list:
             dinosaur.recover_endurance()
             dinosaur.list_status()
+            time.sleep(.25)
         return
         
     # A turn is one attack seqeunce either robot or dinosaur. With 3 members per side there can be a max of 
     # 6 turns per round, however there will be less as dinos/robos are eliminated
     def game_turn(self,turn_num):
         turn_num += 1
+        time.sleep(1)
         print(f'\33[1;37;44m Round: {self.round_number} Turn: {turn_num}\33[0m')
         attacker = self.determine_who_attacks()
         if attacker == 'Robots':
@@ -323,12 +326,14 @@ Welcome to the year 2205 \33[0;0m \n ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
             print('Your robot missed so bad it hurt itself')
             print(f'It caused {-attack_damage} health itself')
             self.alpha_squad.robot_list[robot_num].health -= -attack_damage
-        elif attack_damage < self.jungle_swarm.dinosaur_list[dino_num].hide_strength:
-            print("The robot's attack could not penetrate the dinosaur's tough skin\n No damage was inflicted on the dinosaur")
+        elif attack_damage <= self.jungle_swarm.dinosaur_list[dino_num].hide_strength:
+            print("The robot's attack could not penetrate the dinosaur's tough skin\nNo damage was inflicted on the dinosaur")
         else:
             print(f"Robot attack damage is: {attack_damage} but the dinosaur's tough skin reduced the attack by {self.jungle_swarm.dinosaur_list[dino_num].hide_strength}")
             attack_damage -= self.jungle_swarm.dinosaur_list[dino_num].hide_strength
             self.jungle_swarm.dinosaur_list[dino_num].health -= attack_damage
+            if self.jungle_swarm.dinosaur_list[dino_num].health < 1:
+                self.jungle_swarm.dinosaur_list[dino_num].health = 0
             health_percentage = round((self.jungle_swarm.dinosaur_list[dino_num].health/self.jungle_swarm.dinosaur_list[dino_num].max_health) * 100)
             print(f'{self.jungle_swarm.dinosaur_list[dino_num].name} has {self.jungle_swarm.dinosaur_list[dino_num].health} health reamining ({health_percentage}%)')
         self.alpha_squad.robot_list[robot_num].can_attack_this_round = False
