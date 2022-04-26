@@ -1,3 +1,4 @@
+from numpy import int64
 from fleet import Fleet
 from herd import Herd
 from dinosaur import Dinosaur
@@ -39,12 +40,12 @@ class Battlefield:
 
     # Step 1
     def display_welcome(self):
-        print("""\33[1;30;47m
+        print("""
 The rapid and uncontrolled advancement of genetics research led to the rebirth of savage dinsosaurs which quickly
 evolved and swarmed the Earth. In response, DARPA created an advanced line of Robot Marines equipped with devastating
 weapons and artificIal intelligence to defend the Earth. The self-aware robots identified humans to be their primary threat
 and exterminated all civilization. AI Robots and Genetically Programed Dinosaurs now battle for control of the planet.\n
-Welcome to the year 2205 \33[0;0m \n ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ """)
+Welcome to the year 2205 \33[0;0m \n ******************************************************************************************** """)
 
     # Step 2: Ask user for the number of combatants
     def number_of_combatants(self):
@@ -54,9 +55,7 @@ Welcome to the year 2205 \33[0;0m \n ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
         self.combatants_on_each_side = user_selection
         return
 
-
-    
-    # Step 2: Define robots, weapons, arm robots, and put into Fleet--> alpha_squad
+    # Step 3: Define robots, weapons, arm robots, and put into Fleet--> alpha_squad
     def setup_the_robots(self):
          weapon_group_1 = ['Laser Gun','Eye Beams','Plasma Sword']
          weapon_group_2 = ['Flame Thrower','Laser Cannon','Sonic Blast']
@@ -74,12 +73,13 @@ Welcome to the year 2205 \33[0;0m \n ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
              robo.list_status()
              robo.equip_robot([attack_1,attack_2,attack_3])
              self.alpha_squad.create_fleet(robo)
+         self.alpha_squad.calc_fleet_health()
+         self.alpha_squad.max_fleet_health = self.alpha_squad.fleet_health
          print(f'****{self.alpha_squad.name} Assembled****')
-         print(f'---- ROBOTS READY FOR BATTLE ----\n')
+         print(f'\033[1;37;44m---- ROBOTS READY FOR BATTLE ----\033[0m \n')
         
  
-        
-     # Step 3: Define dinos, type of attacks, assign attack modes to dino, and put into Herd--> jungle_swarm
+     # Step 4: Define dinos, type of attacks, assign attack modes to dino, and put into Herd--> jungle_swarm
     def setup_the_dinosaurs(self):
 
          attack_group_1 = ['Tail Whip','Charge','Roar']
@@ -91,7 +91,7 @@ Welcome to the year 2205 \33[0;0m \n ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
              attack_1 = Weapon(random.choice(attack_group_1),random.choice(range(15,251)),5)
              attack_2 = Weapon(random.choice(attack_group_2),random.choice(range(30,501)),15)
              attack_3 = Weapon(random.choice(attack_group_3),random.choice(range(50,1251)),30)
-             health = random.choice(range(50,1251))
+             health = random.choice(range(100,2251))
              hide = random.choice(range(50,251))
              endurance = random.choice(range(100,1201))
              recovery = random.choice(range(5,151))
@@ -99,12 +99,12 @@ Welcome to the year 2205 \33[0;0m \n ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
              dino.list_status()
              dino.dino_attack([attack_1,attack_2,attack_3])
              self.jungle_swarm.create_herd(dino)
+         self.jungle_swarm.calc_herd_health()
+         self.jungle_swarm.max_herd_health = self.jungle_swarm.herd_health    
          print(f'****{self.jungle_swarm.name} is on the Prowl****')
-         print(f'---- DINOSAURS READY FOR BATTLE ----\n')
-
+         print(f'\033[1;37;42m---- DINOSAURS READY FOR BATTLE ---- \033[0m \n')
      
-    
-    # Step 4: User pics which side they want to play
+    # Step 5: User pics which side they want to play
     def user_picks_side(self):
         message = (f'Pick your Game Play Options')
         print('1: Play as dinosaurs computer is robots')
@@ -131,18 +131,38 @@ Welcome to the year 2205 \33[0;0m \n ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
             print('Sit back and relax. Watch the computer duke it out!')
         
 
-    # Step 5 A battle is made up of a round which contains several turns
+    # Step 6: A battle is made up of a round which contains several turns
     def battle(self):
         print("----Let's get ready to Rumble!!!!!----\n Robots vs Dinosaurs!")
+        print(f'\033[1;37;44m Number of Robots: {self.alpha_squad.number_of_robots_alive} Overall Health: {self.alpha_squad.fleet_health} \033[0m')
+        print(f'\033[1;37;42m Number of Dinosaurs: {self.jungle_swarm.number_of_dinosaurs_alive} Overall Health: {self.jungle_swarm.herd_health}\033[0m')
         while self.jungle_swarm.number_of_dinosaurs_alive > 0 and self.alpha_squad.number_of_robots_alive > 0:
             self.round_number += 1
             self.game_round()
         return
 
-    # Step 6 Display the results of battle
+    # Step 7: Display the results of battle
     def display_winners(self):
+        self.alpha_squad.calc_fleet_health()
+        print('\033[1;37;44m ----Final Robot status summary---- \033[0m')
+        print(f'Robots Operational: {self.alpha_squad.number_of_robots_alive} Overall Health: {self.alpha_squad.fleet_health}')
+        for robot in self.alpha_squad.robot_list:
+            if robot.is_operational:
+                print(f'Name: {robot.name} Health: {robot.health} Shield: {robot.shield} Number of Kills: {robot.number_of_kills} Total Damage: {robot.damage_inflicted}')
+            else:
+                print(f'Name: {robot.name} was terminated by {robot.killed_by} and the killing blow was {robot.killed_with}')
+            time.sleep(1)
+        self.jungle_swarm.calc_herd_health()
+        print('\033[1;37;42m----Final Dinosaur status summary---- \033[0m')
+        print(f'Dinosaurs Alive: {self.jungle_swarm.number_of_dinosaurs_alive} Overall Health: {self.jungle_swarm.herd_health}')
+        for dinosaur in self.jungle_swarm.dinosaur_list:
+            if dinosaur.is_alive:
+                print(f'Name: {dinosaur.name} Health: {dinosaur.health}  Number of Kills: {dinosaur.number_of_kills} Total Damage: {dinosaur.damage_inflicted}')
+            else:
+                print(f'Name: {dinosaur.name} was terminated by {dinosaur.killed_by} and with {dinosaur.killed_with}')
+            time.sleep(1)
         if self.alpha_squad.number_of_robots_alive > 0:
-            print('The robots have defeated the last of genetically altered dinosaurs!')
+            print('\033[1;37;44mThe robots have defeated the last of genetically altered dinosaurs!\033[0m')
             if self.alpha_squad.user_picks_options and not self.jungle_swarm.user_picks_options:
                 print('CONGRATULATIONS!! YOU HAVE WON!')
             elif not self.alpha_squad.user_picks_options and self.jungle_swarm.user_picks_options:
@@ -150,13 +170,13 @@ Welcome to the year 2205 \33[0;0m \n ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
             else:
                 pass
             print("""
-            As the remaining robots gather around the fallen dinosaurs, a long buried bit of python code
-            within the robot AI activates a termination fail safe designed by the DARPA engineers.
-            The robot's explode in huge fireballs, leaving the Earth silent and ending the 
-            last great war of human civilization.""")
+    As the remaining robots gather around the fallen dinosaurs, a long buried bit of python code
+    within the robot AI activates a termination fail safe designed by the DARPA engineers.
+    The robot's explode in huge fireballs, leaving the Earth silent and ending the 
+    last great war of human civilization.""")
 
         if self.jungle_swarm.number_of_dinosaurs_alive > 0:
-            print('The dinosaurs have defeated the last of robot marines!')
+            print('\033[1;37;42mThe dinosaurs have defeated the last of robot marines!\033[0m')
             if self.jungle_swarm.user_picks_options and not self.alpha_squad.user_picks_options:
                 print('CONGRATULATIONS!! YOU HAVE WON!')
             elif not self.jungle_swarm.user_picks_options and self.alpha_squad.user_picks_options:
@@ -164,11 +184,11 @@ Welcome to the year 2205 \33[0;0m \n ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
             else:
                 pass
             print("""
-            As the remaining dinosaurs gather around the burning robots, a fireball errupts in the sky from
-            the upper edge of the atmosphere. As the genetically altered dinosaurs look up, they track 
-            a rapidly moving asteroid that impacts the Earth in a gigantic explosion!!!""")
+    As the remaining dinosaurs gather around the burning robots, a fireball errupts in the sky from
+    the upper edge of the atmosphere. As the genetically altered dinosaurs look up, they track 
+    a rapidly moving asteroid that impacts the Earth in a gigantic explosion!!!""")
         
-        print('\33[0;31;47m Game over. Thank you for playing \33[0m')
+        print('\033[1;37;41m Game over. Thank you for playing \033[0m')
 
     # A round is the peiord containg all the dinosaur/robot attacks by each alive/operational dino/robot
     # Each dino/robot gets 1 attack per round unless it is killed before it attacks. Once either the number
@@ -188,25 +208,32 @@ Welcome to the year 2205 \33[0;0m \n ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
     # determines which weapons/attack types are availible in a given round
     def setup_round(self):
         self.alpha_squad.reset_robot_can_attack()
-        print('----Robot status summary----')
+        self.alpha_squad.calc_fleet_health()
+        print('\033[1;37;44m ----Robot status summary---- \033[0m')
+        print(f'Robots Operational: {self.alpha_squad.number_of_robots_alive} Overall Health: {self.alpha_squad.fleet_health}')
         for robot in self.alpha_squad.robot_list:
             robot.recharge_energy()
             robot.list_status()
             time.sleep(.25)
         self.jungle_swarm.reset_dinosaur_can_attack()
-        print('----Dinosaur status summary----')
+        self.jungle_swarm.calc_herd_health()
+        print('\033[1;37;42m----Dinosaur status summary---- \033[0m')
+        print(f'Dinosaurs Alive: {self.jungle_swarm.number_of_dinosaurs_alive} Overall Health: {self.jungle_swarm.herd_health}')
         for dinosaur in self.jungle_swarm.dinosaur_list:
             dinosaur.recover_endurance()
             dinosaur.list_status()
             time.sleep(.25)
         return
         
-    # A turn is one attack seqeunce either robot or dinosaur. With 3 members per side there can be a max of 
-    # 6 turns per round, however there will be less as dinos/robos are eliminated
+    # A turn is one attack seqeunce either robot or dinosaur.
     def game_turn(self,turn_num):
         turn_num += 1
         time.sleep(1)
-        print(f'\33[1;37;44m Round: {self.round_number} Turn: {turn_num}\33[0m')
+        self.alpha_squad.calc_fleet_health()
+        self.jungle_swarm.calc_herd_health()
+        print(f'\033[1;37;46m Round: {self.round_number} Turn: {turn_num}\033[0m')
+        print(f'\033[1;37;44m Robots: {self.alpha_squad.number_of_robots_alive} Overall Health: {int(100* self.alpha_squad.fleet_health/self.alpha_squad.max_fleet_health)}% \033[0m')
+        print(f'\033[1;37;42m Dinosaurs: {self.jungle_swarm.number_of_dinosaurs_alive} Overall Health: {int(100* self.jungle_swarm.herd_health/self.jungle_swarm.max_herd_health)}% \033[0m')
         attacker = self.determine_who_attacks()
         if attacker == 'Robots':
             self.robots_turn()
@@ -233,7 +260,7 @@ Welcome to the year 2205 \33[0;0m \n ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
     # Dinosaur attack turn. Get which dinosaur strikes, which robot to hit, and what attack style to use
     # from the user
     def dinosaurs_turn(self):
-        print('----Dinosaur Attack----')
+        print('\033[1;37;42m----Dinosaur Attack----\033[0m')
         dino_index = self.which_dino_from_list('Select the attacking dinosaur','attack')
         robot_index = self.which_robot_from_list('Pick which Robot to strike','defend')    
         attack_index = self.which_dino_attack_from_list(dino_index,'Select dinosaur attack')
@@ -242,7 +269,7 @@ Welcome to the year 2205 \33[0;0m \n ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
     # Robt attack turn. Get which robot strikes, which dino to hit, and what weapon to use
     # from the user
     def robots_turn(self):
-        print('----Robot Attack----')
+        print('\033[1;37;44m----Robot Attack----\033[0m')
         robot_index = self.which_robot_from_list('Select the attacking robot','attack')  
         dino_index = self.which_dino_from_list('Pick which dinosaur to strike','defend')
         weapon_index = self.which_robot_weapon_from_list(robot_index,'Select robot weapon')
@@ -253,26 +280,31 @@ Welcome to the year 2205 \33[0;0m \n ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
         damage_modifier = attack_result()
         attack_damage = round(self.jungle_swarm.dinosaur_list[dino_num].attack_type[attack_num].attack_power * damage_modifier)
         if damage_modifier < 0:
-            print('Your dinosaur missed so bad it hurt itself')
-            print(f'It caused {-attack_damage} health itself')
-            self.jungle_swarm.dinosaur_list[dino_num].health -= -attack_damage
+            print(f'{self.jungle_swarm.dinosaur_list[dino_num].name} missed so bad it hurt itself')
+            print(f'It caused {-attack_damage} health to itself')
+            if (-attack_damage > self.jungle_swarm.dinosaur_list[dino_num].health):
+                self.jungle_swarm.dinosaur_list[dino_num].health = 0
+            else:    
+                self.jungle_swarm.dinosaur_list[dino_num].health -= -attack_damage
+            print(f'\033[1;37;42m{self.jungle_swarm.dinosaur_list[dino_num].name} has {self.jungle_swarm.dinosaur_list[dino_num].health} health remaining\033[0m')
         else:
             print(f'Dinosaur attack damage is: {attack_damage}')
+            self.jungle_swarm.dinosaur_list[dino_num].damage_inflicted += attack_damage
             if self.alpha_squad.robot_list[robot_num].shield_level < 1:
                 print(f'{self.jungle_swarm.dinosaur_list[dino_num].name} has damaged {self.alpha_squad.robot_list[robot_num].name} health by {attack_damage} points')
                 self.alpha_squad.robot_list[robot_num].health -= attack_damage
                 if self.alpha_squad.robot_list[robot_num].health < 1:
                     self.alpha_squad.robot_list[robot_num].health = 0
                 health_percentage = round((self.alpha_squad.robot_list[robot_num].health/self.alpha_squad.robot_list[robot_num].max_health) * 100)
-                print(f'{self.alpha_squad.robot_list[robot_num].name} has {self.alpha_squad.robot_list[robot_num].health} health reamining ({health_percentage}%)')
+                print(f'\033[1;37;44m{self.alpha_squad.robot_list[robot_num].name} has {self.alpha_squad.robot_list[robot_num].health} health reamining ({health_percentage}%)\033[0m')
             else:
                 if self.alpha_squad.robot_list[robot_num].shield_level > attack_damage:
                     print(f'{self.jungle_swarm.dinosaur_list[dino_num].name} has damaged {self.alpha_squad.robot_list[robot_num].name} shield by {attack_damage} points')
                     self.alpha_squad.robot_list[robot_num].shield_level -= attack_damage
                     shield_percentage = round((self.alpha_squad.robot_list[robot_num].shield_level/self.alpha_squad.robot_list[robot_num].max_shield_level) * 100)
-                    print(f'{self.alpha_squad.robot_list[robot_num].name} has {self.alpha_squad.robot_list[robot_num].shield_level} shield reamining ({shield_percentage}%)')
+                    print(f'\033[1;37;44m{self.alpha_squad.robot_list[robot_num].name} has {self.alpha_squad.robot_list[robot_num].shield_level} shield reamining ({shield_percentage}%)\033[0m')
                 elif self.alpha_squad.robot_list[robot_num].shield_level == attack_damage:
-                    print(f'{self.jungle_swarm.dinosaur_list[dino_num].name} has destroyed {self.alpha_squad.robot_list[robot_num].name} shield')
+                    print(f'\033[1;37;44m{self.jungle_swarm.dinosaur_list[dino_num].name} has destroyed {self.alpha_squad.robot_list[robot_num].name} shield\033[0m')
                     self.alpha_squad.robot_list[robot_num].shield_level -= attack_damage
                 else:
                     attack_damage -= self.alpha_squad.robot_list[robot_num].shield_level
@@ -282,7 +314,7 @@ Welcome to the year 2205 \33[0;0m \n ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
                         self.alpha_squad.robot_list[robot_num].health = 0
                     self.alpha_squad.robot_list[robot_num].shield_level = 0
                     health_percentage = round((self.alpha_squad.robot_list[robot_num].health/self.alpha_squad.robot_list[robot_num].max_health) * 100)
-                    print(f'{self.alpha_squad.robot_list[robot_num].name} has {self.alpha_squad.robot_list[robot_num].health} health reamining ({health_percentage}%)')
+                    print(f'\033[1;37;44m{self.alpha_squad.robot_list[robot_num].name} has {self.alpha_squad.robot_list[robot_num].health} health reamining ({health_percentage}%)\033[0m')
         self.jungle_swarm.dinosaur_list[dino_num].can_attack_this_round = False
         self.jungle_swarm.number_of_dinosaurs_can_attack_this_round -= 1
         self.jungle_swarm.dinosaur_list[dino_num].endurance -= self.jungle_swarm.dinosaur_list[dino_num].attack_type[attack_num].attack_cost
@@ -293,11 +325,17 @@ Welcome to the year 2205 \33[0;0m \n ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
             self.alpha_squad.robot_list[robot_num].can_attack_this_round = False
             self.alpha_squad.robot_list[robot_num].is_operational = False
             self.alpha_squad.number_of_robots_alive -= 1
+            self.alpha_squad.robot_list[robot_num].killed_by = self.jungle_swarm.dinosaur_list[dino_num].name
+            self.alpha_squad.robot_list[robot_num].killed_with = self.jungle_swarm.dinosaur_list[dino_num].attack_type[attack_num].name
+            self.jungle_swarm.dinosaur_list[dino_num].number_of_kills +=1
         
         if self.jungle_swarm.dinosaur_list[dino_num].health < 1:
             print(f'\33[1;37;41m {self.jungle_swarm.dinosaur_list[dino_num].name} has been died \33[0m')
             self.jungle_swarm.dinosaur_list[dino_num].is_alive = False
             self.jungle_swarm.number_of_dinosaurs_alive -= 1
+            self.jungle_swarm.dinosaur_list[dino_num].killed_by = 'Self'
+            self.jungle_swarm.dinosaur_list[dino_num].killed_with = self.jungle_swarm.dinosaur_list[dino_num].attack_type[attack_num].name
+
         print('')
         time.sleep(1)
         return
@@ -308,19 +346,27 @@ Welcome to the year 2205 \33[0;0m \n ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
         damage_modifier = attack_result()
         attack_damage = round(self.alpha_squad.robot_list[robot_num].weapons_list[weapon_num].attack_power * damage_modifier)
         if damage_modifier < 0:
-            print('Your robot missed so bad it hurt itself')
-            print(f'It caused {-attack_damage} health itself')
-            self.alpha_squad.robot_list[robot_num].health -= -attack_damage
+            print(f'Robot {self.alpha_squad.robot_list[robot_num].name} missed so bad it hurt itself')
+            print(f'It caused {-attack_damage} health to itself')
+            if -attack_damage >  self.alpha_squad.robot_list[robot_num].health:
+                 self.alpha_squad.robot_list[robot_num].health = 0
+            else:     
+                self.alpha_squad.robot_list[robot_num].health -= -attack_damage
+            health_percentage = round((self.alpha_squad.robot_list[robot_num].health/self.alpha_squad.robot_list[robot_num].max_health) * 100)
+            print(f'\033[1;37;44m{self.alpha_squad.robot_list[robot_num].name} has {self.alpha_squad.robot_list[robot_num].health} health reamining ({health_percentage}%)\033[0m')
         elif attack_damage <= self.jungle_swarm.dinosaur_list[dino_num].hide_strength:
             print("The robot's attack could not penetrate the dinosaur's tough skin\nNo damage was inflicted on the dinosaur")
+            health_percentage = round((self.jungle_swarm.dinosaur_list[dino_num].health/self.jungle_swarm.dinosaur_list[dino_num].max_health) * 100)
+            print(f'\033[1;37;42m Dinosaur {self.jungle_swarm.dinosaur_list[dino_num].name} has {self.jungle_swarm.dinosaur_list[dino_num].health} health remaining ({health_percentage}%)\033[0m')
         else:
             print(f"Robot attack damage is: {attack_damage} but the dinosaur's tough skin reduced the attack by {self.jungle_swarm.dinosaur_list[dino_num].hide_strength}")
             attack_damage -= self.jungle_swarm.dinosaur_list[dino_num].hide_strength
+            self.alpha_squad.robot_list[robot_num].damage_inflicted += attack_damage
             self.jungle_swarm.dinosaur_list[dino_num].health -= attack_damage
             if self.jungle_swarm.dinosaur_list[dino_num].health < 1:
                 self.jungle_swarm.dinosaur_list[dino_num].health = 0
             health_percentage = round((self.jungle_swarm.dinosaur_list[dino_num].health/self.jungle_swarm.dinosaur_list[dino_num].max_health) * 100)
-            print(f'{self.jungle_swarm.dinosaur_list[dino_num].name} has {self.jungle_swarm.dinosaur_list[dino_num].health} health reamining ({health_percentage}%)')
+            print(f'\033[1;37;42m {self.jungle_swarm.dinosaur_list[dino_num].name} has {self.jungle_swarm.dinosaur_list[dino_num].health} health reamining ({health_percentage}%)\033[0m')
         self.alpha_squad.robot_list[robot_num].can_attack_this_round = False
         self.alpha_squad.number_of_robots_can_attack_this_round -= 1
         self.alpha_squad.robot_list[robot_num].energy -= self.alpha_squad.robot_list[robot_num].weapons_list[weapon_num].attack_cost
@@ -331,11 +377,17 @@ Welcome to the year 2205 \33[0;0m \n ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
             self.jungle_swarm.dinosaur_list[dino_num].can_attack_this_round = False
             self.jungle_swarm.dinosaur_list[dino_num].is_alive = False
             self.jungle_swarm.number_of_dinosaurs_alive -= 1
+            self.jungle_swarm.dinosaur_list[dino_num].killed_by = self.alpha_squad.robot_list[robot_num].name
+            self.jungle_swarm.dinosaur_list[dino_num].killed_with = self.alpha_squad.robot_list[robot_num].weapons_list[weapon_num].name
+            self.alpha_squad.robot_list[robot_num].number_of_kills += 1
         
         if self.alpha_squad.robot_list[robot_num].health < 1:
             print(f'\33[1;37;41m {self.alpha_squad.robot_list[robot_num].name} has been terminated \33[0m')
             self.alpha_squad.robot_list[robot_num].is_operational = False
             self.alpha_squad.number_of_robots_alive -= 1
+            self.alpha_squad.robot_list[robot_num].killed_by = 'Self'
+            self.alpha_squad.robot_list[robot_num].killed_with = self.alpha_squad.robot_list[robot_num].weapons_list[weapon_num].name
+
         print('')
         time.sleep(1)
         return

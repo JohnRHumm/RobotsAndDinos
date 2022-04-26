@@ -11,6 +11,10 @@ class Robot():
         self.is_operational = True
         self.can_attack_this_round = True
         self.energy_recharge_rate = energy_recharge
+        self.killed_by = ''
+        self.killed_with = ''
+        self.damage_inflicted = 0
+        self.number_of_kills = 0
         print(f'    ....{self.name} is powered up and on online...')
 
    

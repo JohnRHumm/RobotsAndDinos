@@ -12,6 +12,10 @@ class Dinosaur():
         self.attack_type = []
         self.is_alive = True
         self.can_attack_this_round = True
+        self.killed_by = ''
+        self.killed_with = ''
+        self.damage_inflicted = 0
+        self.number_of_kills = 0
         print(f'    ....{self.name} is awake and angry...')
    
    

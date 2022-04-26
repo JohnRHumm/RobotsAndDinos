@@ -5,6 +5,8 @@ class Fleet():
         self.number_of_robots_alive = 0
         self.number_of_robots_can_attack_this_round = 0
         self.user_picks_options = True
+        self.fleet_health = 0
+        self.max_fleet_health = 0
  
     def create_fleet(self,robot):
         self.robot_list.append(robot)
@@ -23,6 +25,13 @@ class Fleet():
             if robot.is_operational:
                 robot.can_attack_this_round = True
                 self.number_of_robots_can_attack_this_round +=1
+   
+    def calc_fleet_health(self):
+        self.fleet_health = 0
+        for robot in self.robot_list:
+            self.fleet_health += robot.health
+
+
 
     
 

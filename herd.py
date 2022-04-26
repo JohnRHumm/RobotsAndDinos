@@ -5,6 +5,8 @@ class Herd():
         self.number_of_dinosaurs_alive = 0
         self.number_of_dinosaurs_can_attack_this_round = 0
         self.user_picks_options = True
+        self.herd_health = 0
+        self.max_herd_health = 0
  
     def create_herd(self,dinosaur):
         self.dinosaur_list.append(dinosaur)
@@ -23,6 +25,10 @@ class Herd():
             if dinosaur.is_alive:
                 dinosaur.can_attack_this_round = True
                 self.number_of_dinosaurs_can_attack_this_round += 1
-
+    
+    def calc_herd_health(self):
+            self.herd_health = 0
+            for dinosaur in self.dinosaur_list:
+                self.herd_health += dinosaur.health
     
 
